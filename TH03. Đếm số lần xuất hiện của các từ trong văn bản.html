@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đếm số từ trong đoạn văn</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background: #ffffff;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            border-top: 5px solid #6200ea;
+        }
+
+        h1 {
+            color: #6200ea;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #6200ea;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            resize: none;
+        }
+
+        .btn {
+            background-color: #6200ea;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            width: 100%;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #3700b3;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            background: #e8f0fe;
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #6200ea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+        }
+
+        th,
+        td {
+            border: 1px solid #6200ea;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #6200ea;
+            color: #fff;
+        }
+
+        td {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Đếm Số Từ Trong Đoạn Văn</h1>
+        <textarea id="textInput" placeholder="Nhập đoạn văn bản..."></textarea>
+        <button class="btn" onclick="countWords()">Đếm Từ</button>
+        <select id="sortOption" class="btn">
+            <option value="alphabet">Sắp xếp theo Alphabet</option>
+            <option value="frequency">Sắp xếp theo Tần suất</option>
+        </select>
+        <div id="result" class="result-container"></div>
+    </div>
+
+    <script>
+        function countWords() {
+            const text = document.getElementById('textInput').value.trim().toLowerCase();
+            const result = document.getElementById('result');
+            const sortOption = document.getElementById('sortOption').value;
+
+            if (!text) {
+                result.innerHTML = "Vui lòng nhập đoạn văn bản.";
+                return;
+            }
+
+            const words = text.match(/[\p{L}]+/gu);
+            if (!words) {
+                result.innerHTML = "Không tìm thấy từ nào trong đoạn văn bản.";
+                return;
+            }
+
+            const wordCount = {};
+            words.forEach(word => {
+                wordCount[word] = (wordCount[word] || 0) + 1;
+            });
+
+            const sortedEntries = Object.entries(wordCount);
+            if (sortOption === "alphabet") {
+                sortedEntries.sort((a, b) => a[0].localeCompare(b[0]));
+            } else if (sortOption === "frequency") {
+                sortedEntries.sort((a, b) => b[1] - a[1]);
+            }
+
+            let output = "<h3>Kết quả:</h3><table><tr><th>Từ</th><th>Số lần xuất hiện</th></tr>";
+            sortedEntries.forEach(([word, count]) => {
+                output += `<tr><td>${word}</td><td>${count}</td></tr>`;
+            });
+            output += "</table>";
+
+            result.innerHTML = output;
+        }
+    </script>
+</body>
+
+</html>
